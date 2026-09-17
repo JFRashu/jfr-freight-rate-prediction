@@ -64,8 +64,8 @@ def add_features(d: pd.DataFrame) -> pd.DataFrame:
     doy = d["date"].dt.dayofyear
     dow = d["date"].dt.dayofweek
     mon = d["date"].dt.month
-    d["doy_sin"]     = np.sin(2 * np.pi * doy / 365)
-    d["doy_cos"]     = np.cos(2 * np.pi * doy / 365)
+    d["doy_sin"]     = np.sin(2 * np.pi * doy / 365.25)
+    d["doy_cos"]     = np.cos(2 * np.pi * doy / 365.25)
     d["dow_sin"]     = np.sin(2 * np.pi * dow / 7)
     d["dow_cos"]     = np.cos(2 * np.pi * dow / 7)
     d["month_sin"]   = np.sin(2 * np.pi * mon / 12)

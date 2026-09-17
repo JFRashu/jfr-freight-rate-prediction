@@ -1,5 +1,5 @@
 """Builds reports/Freight_Rate_Report.pdf from the figures in reports/figures
-and the metrics in reports/holdout_metrics.json. Run after train.py, eda.py
+and the metrics in reports/holdout_metrics.json. Run after train.py, eda_new.py
 and score.py have all produced their outputs.
 """
 from __future__ import annotations
@@ -247,7 +247,7 @@ def main():
         "python -m pip install -r requirements.txt\n"
         "python train.py      # cleans data, validates, fits final model, writes\n"
         "                      # validation_predictions.csv and december_predictions.csv\n"
-        "python eda.py         # regenerates reports/figures used in this report\n"
+        "python eda_new.py     # regenerates reports/figures used in this report\n"
         "python score.py --predictions validation_predictions.csv \\\n"
         "                 --december-predictions december_predictions.csv\n"
         "python generate_report.py   # rebuilds this PDF",
@@ -256,7 +256,7 @@ def main():
     pdf.ln(3)
     pdf.body(
         "See README.md for a description of the repository layout (src/features.py, src/model.py, "
-        "train.py, eda.py, score.py) and the full run instructions."
+        "train.py, eda_new.py, score.py) and the full run instructions."
     )
 
     out = ROOT / "reports" / "Freight_Rate_Report.pdf"
