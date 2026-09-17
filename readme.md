@@ -5,11 +5,11 @@ See `freight-rate-ml-assessment.pdf` for the original assessment instructions.
 ## Repository layout
 
 ```
-train-test.csv                       labeled development data (Jan-Oct 2025)
-validation.csv                       12,000 loads needing predictions (load_id + features)
-validation-predictions-template.csv  template to fill (load_id, predicted_rate)
-december-chart-inputs.csv            31 rows, one per December day, fixed route
-score.py                             provided scorer/validator (unchanged)
+data/train-test.csv                       labeled development data (Jan-Oct 2025)
+data/validation.csv                       12,000 loads needing predictions (load_id + features)
+data/validation-predictions-template.csv  template to fill (load_id, predicted_rate)
+data/december-chart-inputs.csv            31 rows, one per December day, fixed route
+score.py                                  provided scorer/validator (unchanged)
 
 src/features.py                      shared data cleaning + feature engineering
 src/model.py                         model definition (HistGradientBoostingRegressor)
@@ -52,15 +52,15 @@ quality issues found, model selection and the December chart is in
 
 - **Validation split**: time-based (train on Jan-Aug 2025, hold out Sep-Oct
   2025), because the task is forecasting dates never seen in training
-  (validation.csv is Nov-Dec 2025; the December chart is Dec 2025). A random
-  K-fold split would overstate accuracy.
+  (data/validation.csv is Nov-Dec 2025; the December chart is Dec 2025). A
+  random K-fold split would overstate accuracy.
 - **Features**: distance, weight (sign-flip errors fixed via `abs()`),
   pickup/delivery lat/lon, equipment, and cyclical (sin/cos) date encodings.
   `market_index` and `quote_signal` are excluded — they're missing from
-  `december-chart-inputs.csv` and showed negligible predictive value in
+  `data/december-chart-inputs.csv` and showed negligible predictive value in
   testing, so dropping them keeps one consistent pipeline for both outputs.
   City names are intentionally *not* used as a categorical feature since 8
-  of the 72 cities in `validation.csv` never appear in training; lat/lon
+  of the 72 cities in `data/validation.csv` never appear in training; lat/lon
   generalizes to unseen cities instead.
 - **Model**: `HistGradientBoostingRegressor` (absolute-error loss), chosen
   after comparing against Linear Regression, Random Forest, Gradient

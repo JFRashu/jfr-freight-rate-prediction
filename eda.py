@@ -30,7 +30,7 @@ def savefig(fig, name):
 
 
 def main():
-    df = pd.read_csv(ROOT / "train-test.csv")
+    df = pd.read_csv(ROOT / "data" / "train-test.csv")
     df["date"] = pd.to_datetime(df["date"])
 
     # 1. posted_rate distribution

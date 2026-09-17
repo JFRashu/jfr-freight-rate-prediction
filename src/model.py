@@ -9,7 +9,7 @@ from sklearn.preprocessing import OneHotEncoder
 from .features import CATEGORICAL_FEATURES
 
 # Chosen via a time-based holdout comparison against LinearRegression,
-# RandomForest, GradientBoosting and XGBoost (see reports/eda_findings.md).
+# RandomForest, GradientBoosting and XGBoost (see reports/Freight_Rate_Report.pdf).
 # HistGradientBoostingRegressor with an absolute-error objective gave the
 # best MAE/MAPE and was competitive on RMSE, and is robust to the small
 # fraction of extreme-value "spot surge" loads in the training data.

@@ -5,8 +5,8 @@
    2025, evaluate on Sep-Oct 2025) since the real task is forecasting
    unseen future dates (Nov validation set, Dec chart).
 3. Refits the final model on all available labeled data.
-4. Predicts validation.csv -> validation_predictions.csv
-5. Predicts december-chart-inputs.csv -> december_predictions.csv
+4. Predicts data/validation.csv -> validation_predictions.csv
+5. Predicts data/december-chart-inputs.csv -> december_predictions.csv
 
 Run: python train.py
 """
@@ -29,10 +29,11 @@ from src.features import ALL_FEATURES, attach_geo, build_city_lookup, clean_and_
 from src.model import build_pipeline
 
 ROOT = Path(__file__).resolve().parent
-TRAIN_PATH = ROOT / "train-test.csv"
-VALIDATION_PATH = ROOT / "validation.csv"
-VALIDATION_TEMPLATE_PATH = ROOT / "validation-predictions-template.csv"
-DECEMBER_PATH = ROOT / "december-chart-inputs.csv"
+DATA_DIR = ROOT / "data"
+TRAIN_PATH = DATA_DIR / "train-test.csv"
+VALIDATION_PATH = DATA_DIR / "validation.csv"
+VALIDATION_TEMPLATE_PATH = DATA_DIR / "validation-predictions-template.csv"
+DECEMBER_PATH = DATA_DIR / "december-chart-inputs.csv"
 REPORTS_DIR = ROOT / "reports"
 HOLDOUT_CUTOFF = pd.Timestamp("2025-09-01")
 TARGET = "posted_rate"

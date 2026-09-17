@@ -9,10 +9,10 @@ import numpy as np
 import pandas as pd
 
 # Columns fed into the model. Deliberately excludes market_index and
-# quote_signal: they are not present in december-chart-inputs.csv, and
+# quote_signal: they are not present in data/december-chart-inputs.csv, and
 # exploratory analysis showed they carry almost no linear or tree-importance
-# signal for posted_rate (see reports/eda_findings.md). Keeping them out
-# gives one consistent pipeline for both prediction targets.
+# signal for posted_rate (see reports/Freight_Rate_Report.pdf). Keeping them
+# out gives one consistent pipeline for both prediction targets.
 NUMERIC_FEATURES = [
     "distance",
     "weight",
