@@ -24,7 +24,12 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score,
 )
+import random
+import numpy as np
 
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
 from src.features import ALL_FEATURES, attach_geo, build_city_lookup, clean_and_engineer, fit_weight_median
 from src.model import build_pipeline
 
