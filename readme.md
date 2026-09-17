@@ -1,25 +1,70 @@
 # Freight Rate Prediction Challenge
 
-See `Freight_Rate_ML_Assessment.pdf` for the assessment instructions.
+See `freight-rate-ml-assessment.pdf` for the original assessment instructions.
 
-## What to do
+## Repository layout
 
-1. Train and validate your model using `data/train_test.csv`.
-2. Predict every load in `data/validation.csv`. Each load has a unique `load_id`.
-3. Fill the matching `predicted_rate` values in `data/validation_predictions_template.csv` and save it as `validation_predictions.csv`.
-4. Predict every row in `data/december_chart_inputs.csv` by filling its `predicted_rate` column.
-5. Install the scorer requirements and run:
+```
+train-test.csv                       labeled development data (Jan-Oct 2025)
+validation.csv                       12,000 loads needing predictions (load_id + features)
+validation-predictions-template.csv  template to fill (load_id, predicted_rate)
+december-chart-inputs.csv            31 rows, one per December day, fixed route
+score.py                             provided scorer/validator (unchanged)
+
+src/features.py                      shared data cleaning + feature engineering
+src/model.py                         model definition (HistGradientBoostingRegressor)
+train.py                             trains, validates, and writes both prediction files
+eda.py                               regenerates the figures used in the report
+generate_report.py                   builds reports/Freight_Rate_Report.pdf
+
+reports/                             holdout metrics, trained model, figures, PDF report
+scorer_results/                      output of score.py (candidate_december.png)
+```
+
+## Setup
 
 ```bash
 python -m pip install -r requirements.txt
-python score.py --predictions validation_predictions.csv --december-predictions data/december_chart_inputs.csv
 ```
 
-The scorer validates both files and creates `scorer_results/candidate_december.png`.
+## Run
 
-## Submit
+```bash
+# 1. Clean data, validate on a time-based holdout, fit the final model,
+#    and write validation_predictions.csv + december_predictions.csv
+python train.py
 
-- GitHub repository containing your code, dependencies, and run instructions
-- `validation_predictions.csv`
-- PDF or DOCX report containing your validation, data split approach and `candidate_december.png`
-- 2-3 minute Loom link
+# 2. Validate both output files and render the December chart
+python score.py --predictions validation_predictions.csv --december-predictions december_predictions.csv
+
+# 3. (optional) regenerate the EDA/diagnostic figures and the PDF report
+python -m pip install -r requirements-report.txt
+python eda.py
+python generate_report.py
+```
+
+`train.py` prints holdout MAE/RMSE/MAPE/R2 and saves them to
+`reports/holdout_metrics.json`. The full write-up of the approach, data
+quality issues found, model selection and the December chart is in
+`reports/Freight_Rate_Report.pdf`.
+
+## Approach summary
+
+- **Validation split**: time-based (train on Jan-Aug 2025, hold out Sep-Oct
+  2025), because the task is forecasting dates never seen in training
+  (validation.csv is Nov-Dec 2025; the December chart is Dec 2025). A random
+  K-fold split would overstate accuracy.
+- **Features**: distance, weight (sign-flip errors fixed via `abs()`),
+  pickup/delivery lat/lon, equipment, and cyclical (sin/cos) date encodings.
+  `market_index` and `quote_signal` are excluded — they're missing from
+  `december-chart-inputs.csv` and showed negligible predictive value in
+  testing, so dropping them keeps one consistent pipeline for both outputs.
+  City names are intentionally *not* used as a categorical feature since 8
+  of the 72 cities in `validation.csv` never appear in training; lat/lon
+  generalizes to unseen cities instead.
+- **Model**: `HistGradientBoostingRegressor` (absolute-error loss), chosen
+  after comparing against Linear Regression, Random Forest, Gradient
+  Boosting, and XGBoost on the same holdout.
+
+See `reports/Freight_Rate_Report.pdf` for full details, figures, and the
+December prediction chart.
